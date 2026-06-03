@@ -1,0 +1,256 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum UserRole {
+  ADMIN
+  WAREHOUSE_STAFF
+  DRIVER
+}
+
+enum ContractStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ProcurementOrderStatus {
+  PENDING
+  RECEIVED
+  CANCELLED
+}
+
+enum ProductionOrderStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum SupplierRegion {
+  KEBUMEN
+  PONOROGO
+  DEMAK
+  WONOGIRI
+}
+
+enum SalesOrderStatus {
+  PENDING
+  PROCESSING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  DISPATCHED
+  DELIVERED
+}
+
+enum VehicleType {
+  FUSO
+  COLT_DIESEL
+  PICKUP
+}
+
+enum MillingJobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum SalesOrderCustomerType {
+  BULOG
+  HOTEL
+  RETAIL
+}
+
+enum ProductName {
+  DUA KURMA
+  STRAWBERRY
+  PRODUCTBULOG
+}
+
+model User {
+  id                      Int                     @id @default(autoincrement())
+  name                    String
+  email                   String
+  password                String
+  role                    UserRole
+  createdAt               DateTime                @default(now())
+  deliveries              Delivery[]
+  productionOrderWorkers  ProductionOrderWorker[]
+}
+
+model Supplier {
+  id                Int                @id @default(autoincrement())
+  name              String
+  region            SupplierRegion
+  phone             String
+  address           String
+  createdAt         DateTime           @default(now())
+  ProcurementOrders ProcurementOrder[]  
+}
+
+model Contract {
+  id                Int                @id @default(autoincrement())
+  contractNumber    String             @unique
+  totalWeightKg     Float
+  fulfilledWeightKg Float              @default(0)
+  pricePerKg        Float
+  startDate         DateTime
+  endDate           DateTime
+  status            ContractStatus
+  createdAt         DateTime           @default(now())
+  salesOrders       SalesOrder[]
+  ProcurementOrders ProcurementOrder[]
+}
+
+model ProcurementOrder {
+  id            Int                     @id @default(autoincrement())
+  supplierId    Int
+  contractId    Int?
+  orderDate     DateTime
+  totalWeightKg Float
+  pricePerKg    Float
+  status        ProcurementOrderStatus
+  createdAt     DateTime                @default(now())
+  supplier      Supplier                @relation(fields: [supplierId], references: [id])
+  contract      Contract?               @relation(fields: [contractId], references: [id])   
+  rawMaterial   rawMaterial?
+}
+
+model Warehouse {
+  id            Int       @id @default(autoincrement())
+  name          String
+  location      String
+  capacityPerKg Float
+  createdAt     DateTime  @default(now())
+  stocks        Stock[]
+  rawMaterials  RawMaterial[]
+}
+
+model RawMaterial {
+  id                    Int               @id @default(autoincrement())
+  procurementOrderId    Int               @unique
+  warehouseId           Int
+  region                String
+  weightPerKg           Float
+  remainingWeightPerKg  Float
+  createdAt             DateTime          @default(now())
+  productionOrders      ProductionOrder[]
+  procurementOrder      ProcurementOrder  @relation(fields:[procurementOrderId], references: [id])
+  warehouse             Warehouse         @relation(fields:[warehouseId], references: [id])
+}
+
+model Product {
+  id                Int               @id @default(autoincrement())
+  name              String
+  description       String?
+  unit              String            @default("kg")
+  createdAt         DateTime          @default(now())
+  stocks            Stock[]
+  salesOrderItems   salesOrderItem[]
+  ProductionOrders  ProductionOrder[]
+}
+
+model productionOrder {
+  id                      Int                   @id @default(autoincrement())
+  rawMaterialId           Int
+  productId               Int
+  inputWeightPerKg        Float
+  outputWeightPerKg       Float
+  susutPerKg              Float
+  productionDate          DateTime
+  status                  ProductionOrderStatus
+  createdAt               DateTime              @default(now())
+  rawMaterial             RawMaterial           @relation(fields: [rawMaterialId], references: [id])
+  product                 Product               @relation(fields: [productId], references: [id])
+  productionOrderWorkers  ProductionOrderWorker[]
+}
+
+model ProductionOrderWorker {
+  id                Int @id @default(autoincrement())
+  productionOrderId Int 
+  userId            Int 
+  productionOrder   ProductionOrder @relation(fields: [productionOrderId], references: [id])
+  user              User            @relation(fields: [userId], references: [id])
+
+  @@unique([productionOrderId, userId])
+}
+
+model Stock {
+  id            Int       @id @default(autoincrement())
+  warehouseId   Int
+  productId     Int
+  quantityPerKg Float
+  updateAt      DateTime  @updateAt
+  warehouse     Warehouse @relation(fields: [warehouseId], references: [id])
+  product       Product   @relation(fields: [productId], references: [id])
+
+  @@unique([warehouseId, productId])
+}
+
+model SalesOrder {
+  id              Int                     @id @default(autoincrement())
+  contractId      Int?
+  customerName    String
+  customerType    SalesOrderCustomerType
+  orderDate       DateTime
+  status          SalesOrderStatus
+  createdAt       DateTime                @default(now())
+  contract        Contract?               @relation(fields: [contractId], references: [id])
+  salesOrderItems salesOrderItem[]
+  deliveries      Delivery[]
+}
+
+model SalesOrderItem {
+  id            Int         @id @default(autoincrement())
+  salesOrderId  Int
+  productId     Int
+  quantityPerKg Float
+  pricePerKg    Float
+  salesOrder    SalesOrder  @relation(fields: [salesOrderId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id])
+}
+
+model Vehicle {
+  id            Int         @id @default(autoincrement())
+  plateNumber   String      @unique
+  type          VehicleType
+  capacityPerKg Float
+  isAvailable   Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  deliveries    Delivery[]
+}
+
+model Delivery {
+  id            Int             @id @default(autoincrement())
+  salesOrderId  Int             
+  driverId      Int
+  vehicleId     Int
+  status        DeliveryStatus
+  departureTime DateTime?
+  arrivalTime   DateTime?
+  notes         String?
+  createdAt     DateTime        @default(now())
+  salesOrder    SalesOrder      @relation(fields: [salesOrderId], references: [id])
+  user          User            @relation(fields: [driverId], references: [id])
+  Vehicle       Vehicle         @relation(fields: [vehicleId], references: [id])
+}
+
+\\ next ditanyain :
+\\ 1. di model stock, warehouseId dan prodcutId dibikin composite key karena business logicnya setiap gudang bisa memiliki berbagai macam product, dan sebuah product bisa berada di berbagai macam gudang. bener ya?
+\\ 2. di model delivery, departureTime dan arrivalTime bisa dibikin optional emangnya? bukankah departureTime itu tidak boleh null?
