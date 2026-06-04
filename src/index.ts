@@ -1,13 +1,11 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from "dotenv";
 import redis from "./config/redis";
-
-dotenv.config();
+import { env } from "./config/env";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = env.PORT
 
 app.use(helmet());
 app.use(cors());
