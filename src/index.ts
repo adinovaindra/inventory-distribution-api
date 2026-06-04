@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import { timeStamp } from "node:console";
+import redis from "./config/redis";
 
 dotenv.config();
 
@@ -17,12 +17,14 @@ app.get("/health", (req, res) => {
   res.json({
     status: "ok",
     message: "Inventory Distribution API is running!",
-    timeStamp: new Date().toISOString(),
+    timestamp: new Date().toISOString(),
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+
+  await redis.connect()
 });
 
 export default app;
