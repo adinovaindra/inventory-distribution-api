@@ -86,7 +86,7 @@ enum ProductName {
 model User {
   id                      Int                     @id @default(autoincrement())
   name                    String
-  email                   String
+  email                   String                  @unique
   password                String
   role                    UserRole
   createdAt               DateTime                @default(now())
