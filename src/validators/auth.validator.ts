@@ -9,3 +9,5 @@ export const registerSchema = z.object({
     .min(8, "Password is too short. Minimum length is 8 characters"),
   role: z.enum(UserRole),
 });
+
+export type RegisterInput = z.infer<typeof registerSchema>;
