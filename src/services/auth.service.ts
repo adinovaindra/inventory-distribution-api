@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { createUser, findByEmail } from "../repositories/user.repository";
-import { BadRequestError } from "../utils/error";
-import { RegisterInput } from "../validators/auth.validator";
+import { BadRequestError, UnauthorizedError } from "../utils/error";
+import { LoginInput, RegisterInput } from "../validators/auth.validator";
 import { Prisma } from "@prisma/client";
+import { signToken } from "../utils/jwt";
 
 export async function registerUser(data: RegisterInput) {
   const user = await findByEmail(data.email);
@@ -13,7 +14,7 @@ export async function registerUser(data: RegisterInput) {
   const hashedPassword = await bcrypt.hash(data.password, 10);
   try {
     const createdUser = await createUser({ ...data, password: hashedPassword });
-    const {password: _password, ...safeUser} = createdUser
+    const { password: _password, ...safeUser } = createdUser;
     return safeUser;
   } catch (error) {
     if (
@@ -24,4 +25,27 @@ export async function registerUser(data: RegisterInput) {
     }
     throw error;
   }
+}
+
+export async function loginUser(data: LoginInput) {
+  const registeredUser = await findByEmail(data.email);
+
+  if (!registeredUser) {
+    throw new UnauthorizedError("Email or password is invalid");
+  }
+
+  const isMatch = await bcrypt.compare(data.password, registeredUser.password);
+
+  if (!isMatch) {
+    throw new UnauthorizedError("Email or password is invalid");
+  }
+
+  const payload = {
+    userId: registeredUser.id,
+    role: registeredUser.role,
+  };
+
+  return {
+    token: signToken(payload),
+  };
 }

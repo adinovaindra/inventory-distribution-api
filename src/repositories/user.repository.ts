@@ -14,3 +14,11 @@ export async function createUser(data: Prisma.UserCreateInput): Promise<User> {
     data,
   });
 }
+
+export async function findById(id: number): Promise<User | null> {
+  return prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+}

@@ -24,3 +24,9 @@ export class UnauthorizedError extends BaseError {
     super(message, 401);
   }
 }
+
+export class ForbiddenError extends BaseError {
+  constructor(message: string) {
+    super(message, 403)
+  }
+}
