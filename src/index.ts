@@ -4,6 +4,8 @@ import helmet from "helmet";
 import redis from "./config/redis";
 import { env } from "./config/env";
 import { errorHandler } from "./middlewares/error.middleware";
+import { authRouter } from "./routes/auth.routes";
+
 
 const app = express();
 const PORT = env.PORT
@@ -19,6 +21,8 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use("/api/v1/auth", authRouter)
 
 app.use(errorHandler)
 
