@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "../utils/error";
 import { verifyToken } from "../utils/jwt";
+import redis from "../config/redis";
 
-export function authenticate(
+export async function authenticate(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -19,5 +20,11 @@ export function authenticate(
   } catch (error) {
     throw new UnauthorizedError("Invalid or expired token");
   }
+
+  const isBlacklisted = await redis.get(`blacklist:${token}`);
+  if (isBlacklisted) {
+    throw new UnauthorizedError("Token has been revoked!");
+  }
+
   next();
 }

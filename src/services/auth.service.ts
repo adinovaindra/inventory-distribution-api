@@ -4,6 +4,8 @@ import { BadRequestError, UnauthorizedError } from "../utils/error";
 import { LoginInput, RegisterInput } from "../validators/auth.validator";
 import { Prisma } from "@prisma/client";
 import { signToken } from "../utils/jwt";
+import redis from "../config/redis";
+import jwt from "jsonwebtoken";
 
 export async function registerUser(data: RegisterInput) {
   const user = await findByEmail(data.email);
@@ -48,4 +50,16 @@ export async function loginUser(data: LoginInput) {
   return {
     token: signToken(payload),
   };
+}
+
+export async function logoutUser(token: string) {
+  const decoded = jwt.decode(token);
+
+  if (!decoded || typeof decoded === "string" || !decoded.exp) {
+    throw new UnauthorizedError("Invalid Token!");
+  }
+
+  const ttlInSeconds = decoded.exp - Math.floor(Date.now() / 1000);
+
+  return redis.set(`blacklist:${token}`, "1", "EX", ttlInSeconds);
 }

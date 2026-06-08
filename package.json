@@ -32,5 +32,8 @@
     "jsonwebtoken": "^9.0.3",
     "prisma": "^5.22.0",
     "zod": "^4.4.3"
+  },
+  "prisma": {
+    "seed": "node dist/seed.js"
   }
 }
