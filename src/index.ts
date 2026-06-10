@@ -6,6 +6,7 @@ import { env } from "./config/env";
 import { errorHandler } from "./middlewares/error.middleware";
 import { authRouter } from "./routes/auth.routes";
 import { profileRouter } from "./routes/profile.routes";
+import { supplierRouter } from "./routes/supplier.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -25,6 +26,8 @@ app.get("/health", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/profiles", profileRouter);
+
+app.use("/api/v1/suppliers", supplierRouter);
 
 app.use(errorHandler);
 

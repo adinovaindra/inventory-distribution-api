@@ -23,10 +23,7 @@ export async function findById(id: number): Promise<User | null> {
   });
 }
 
-export async function updateUser(
-  id: number,
-  data: Prisma.UserUpdateInput,
-): Promise<User> {
+export async function updateUser(id: number, data: Prisma.UserUpdateInput): Promise<User> {
   return prisma.user.update({
     where: {
       id,
