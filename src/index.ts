@@ -8,6 +8,7 @@ import { authRouter } from "./routes/auth.routes";
 import { profileRouter } from "./routes/profile.routes";
 import { supplierRouter } from "./routes/supplier.routes";
 import { productRouter } from "./routes/product.routes";
+import { warehouseRouter } from "./routes/warehouse.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -31,6 +32,8 @@ app.use("/api/v1/profiles", profileRouter);
 app.use("/api/v1/suppliers", supplierRouter);
 
 app.use("/api/v1/products", productRouter);
+
+app.use("/api/v1/warehouses", warehouseRouter);
 
 app.use(errorHandler);
 

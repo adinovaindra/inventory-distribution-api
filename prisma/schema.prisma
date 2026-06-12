@@ -134,7 +134,7 @@ model ProcurementOrder {
 
 model Warehouse {
   id            Int       @id @default(autoincrement())
-  name          String
+  name          String    @unique
   location      String
   capacityPerKg Float
   createdAt     DateTime  @default(now())
