@@ -157,9 +157,8 @@ model RawMaterial {
 
 model Product {
   id                  Int               @id @default(autoincrement())
-  name                ProductName
+  name                ProductName       @unique
   description         String?
-  unit                String            @default("kg")
   createdAt           DateTime          @default(now())
   stocks              Stock[]
   salesOrderProduts   SalesOrderProduct[]

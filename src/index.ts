@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 import { authRouter } from "./routes/auth.routes";
 import { profileRouter } from "./routes/profile.routes";
 import { supplierRouter } from "./routes/supplier.routes";
+import { productRouter } from "./routes/product.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -28,6 +29,8 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/profiles", profileRouter);
 
 app.use("/api/v1/suppliers", supplierRouter);
+
+app.use("/api/v1/products", productRouter);
 
 app.use(errorHandler);
 
