@@ -2,7 +2,11 @@ import { Supplier, Prisma } from "@prisma/client";
 import { prisma } from "../config/database";
 
 export async function findAllSupplierRepo(): Promise<Supplier[]> {
-  return prisma.supplier.findMany();
+  return prisma.supplier.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
 }
 
 export async function findSupplierByIdRepo(id: number): Promise<Supplier | null> {

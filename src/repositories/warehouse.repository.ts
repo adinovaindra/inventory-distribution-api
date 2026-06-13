@@ -2,7 +2,11 @@ import { Prisma, RawMaterial, Stock, Warehouse } from "@prisma/client";
 import { prisma } from "../config/database";
 
 export async function findAllWarehouseRepo(): Promise<Warehouse[]> {
-  return prisma.warehouse.findMany();
+  return prisma.warehouse.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
 }
 
 export async function findWarehouseByIdRepo(id: number): Promise<Warehouse | null> {

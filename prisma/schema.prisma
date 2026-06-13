@@ -105,17 +105,17 @@ model Supplier {
 }
 
 model Contract {
-  id                Int                @id @default(autoincrement())
-  contractNumber    String             @unique
-  totalWeightKg     Float
-  fulfilledWeightKg Float              @default(0)
-  pricePerKg        Float
-  startDate         DateTime
-  endDate           DateTime
-  status            ContractStatus
-  createdAt         DateTime           @default(now())
-  salesOrders       SalesOrder[]
-  ProcurementOrders ProcurementOrder[]
+  id                    Int                @id @default(autoincrement())
+  contractNumber        String             @unique
+  totalWeightPerKg      Float
+  fulfilledWeightPerKg  Float              @default(0)
+  pricePerKg            Float
+  startDate             DateTime          
+  endDate               DateTime
+  status                ContractStatus     @default(ACTIVE)
+  createdAt             DateTime           @default(now())
+  salesOrders           SalesOrder[]
+  ProcurementOrders     ProcurementOrder[]
 }
 
 model ProcurementOrder {

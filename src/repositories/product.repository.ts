@@ -2,7 +2,11 @@ import { Prisma, Product, ProductName } from "@prisma/client";
 import { prisma } from "../config/database";
 
 export async function findAllProductRepo(): Promise<Product[]> {
-  return prisma.product.findMany();
+  return prisma.product.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
 }
 
 export async function findProductById(id: number): Promise<Product | null> {

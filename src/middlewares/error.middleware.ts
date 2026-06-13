@@ -18,6 +18,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
       })),
     });
   } else {
+    console.error("UNHANDLED ERROR : ", err)
     res.status(500).json({
       success: false,
       message: "Internal Server Error",

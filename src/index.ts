@@ -9,6 +9,7 @@ import { profileRouter } from "./routes/profile.routes";
 import { supplierRouter } from "./routes/supplier.routes";
 import { productRouter } from "./routes/product.routes";
 import { warehouseRouter } from "./routes/warehouse.routes";
+import { contractRouter } from "./routes/contract.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -34,6 +35,8 @@ app.use("/api/v1/suppliers", supplierRouter);
 app.use("/api/v1/products", productRouter);
 
 app.use("/api/v1/warehouses", warehouseRouter);
+
+app.use("/api/v1/contracts", contractRouter);
 
 app.use(errorHandler);
 
