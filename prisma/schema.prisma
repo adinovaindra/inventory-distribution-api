@@ -119,17 +119,17 @@ model Contract {
 }
 
 model ProcurementOrder {
-  id            Int                     @id @default(autoincrement())
-  supplierId    Int
-  contractId    Int?
-  orderDate     DateTime
-  totalWeightKg Float
-  pricePerKg    Float
-  status        ProcurementOrderStatus
-  createdAt     DateTime                @default(now())
-  supplier      Supplier                @relation(fields: [supplierId], references: [id])
-  contract      Contract?               @relation(fields: [contractId], references: [id])   
-  rawMaterial   RawMaterial?
+  id               Int                     @id @default(autoincrement())
+  supplierId       Int
+  contractId       Int?
+  orderDate        DateTime
+  totalWeightPerKg Float
+  pricePerKg       Float
+  status           ProcurementOrderStatus  @default(PENDING)
+  createdAt        DateTime                @default(now())
+  supplier         Supplier                @relation(fields: [supplierId], references: [id])
+  contract         Contract?               @relation(fields: [contractId], references: [id])   
+  rawMaterial      RawMaterial?
 }
 
 model Warehouse {

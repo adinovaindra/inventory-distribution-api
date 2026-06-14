@@ -10,6 +10,7 @@ import { supplierRouter } from "./routes/supplier.routes";
 import { productRouter } from "./routes/product.routes";
 import { warehouseRouter } from "./routes/warehouse.routes";
 import { contractRouter } from "./routes/contract.routes";
+import { procurementOrderRouter } from "./routes/procurementOrder.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -37,6 +38,8 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/warehouses", warehouseRouter);
 
 app.use("/api/v1/contracts", contractRouter);
+
+app.use("/api/v1/procurement-orders", procurementOrderRouter);
 
 app.use(errorHandler);
 
