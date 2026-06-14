@@ -1,9 +1,11 @@
-import { Prisma, ProcurementOrder } from "@prisma/client";
+import { ProcurementOrder } from "@prisma/client";
 import { addProcurementOrderRepo, findAllProcurementOrdersRepo, findProcurementOrderByIdRepo, updateProcurementOrderRepo } from "../repositories/procurementOrder.repository";
-import { NotFoundError } from "../utils/error";
+import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateProcurementOrderInput, UpdateProcurementOrderInput } from "../validators/procurementOrder.validator";
 import { getSupplierById } from "./supplier.service";
 import { getContractById } from "./contract.service";
+import { getWarehouseById } from "./warehouse.service";
+import { addRawMaterialRepo } from "../repositories/rawMaterial.repository";
 
 export async function getAllProcurementOrders(): Promise<ProcurementOrder[]> {
   return findAllProcurementOrdersRepo();
@@ -33,12 +35,30 @@ export async function createProcurementOrder(data: CreateProcurementOrderInput):
 }
 
 export async function updateProcurementOrder(id: number, data: UpdateProcurementOrderInput): Promise<ProcurementOrder> {
-  try {
-    return await updateProcurementOrderRepo(id, data);
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-      throw new NotFoundError("Procurement Order is not found");
-    }
-    throw error;
+  const procurementOrder = await getProcurementOrderById(id);
+
+  if (procurementOrder.status === "RECEIVED") {
+    throw new BadRequestError("Procurement order is already received and cannot be updated!");
   }
+
+  if (data.status === "RECEIVED") {
+    if (!data.warehouseId) {
+      throw new BadRequestError("WarehouseId is required when status is RECEIVED!");
+    }
+
+    await getWarehouseById(data.warehouseId);
+    const supplier = await getSupplierById(procurementOrder.supplierId);
+
+    await addRawMaterialRepo({
+      procurementOrderId: procurementOrder.id,
+      warehouseId: data.warehouseId,
+      region: supplier.region,
+      weightPerKg: procurementOrder.totalWeightPerKg,
+      remainingWeightPerKg: procurementOrder.totalWeightPerKg,
+    });
+  }
+
+  return updateProcurementOrderRepo(id, {
+    status: data.status,
+  });
 }

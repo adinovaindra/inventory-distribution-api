@@ -11,6 +11,7 @@ import { productRouter } from "./routes/product.routes";
 import { warehouseRouter } from "./routes/warehouse.routes";
 import { contractRouter } from "./routes/contract.routes";
 import { procurementOrderRouter } from "./routes/procurementOrder.routes";
+import { rawMaterialRouter } from "./routes/rawMaterial.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -40,6 +41,8 @@ app.use("/api/v1/warehouses", warehouseRouter);
 app.use("/api/v1/contracts", contractRouter);
 
 app.use("/api/v1/procurement-orders", procurementOrderRouter);
+
+app.use("/api/v1/raw-materials", rawMaterialRouter);
 
 app.use(errorHandler);
 

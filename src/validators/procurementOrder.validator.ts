@@ -13,6 +13,7 @@ export type CreateProcurementOrderInput = z.infer<typeof createProcurementOrderS
 
 export const updateProcurementOrderSchema = z.object({
   status: z.enum(ProcurementOrderStatus, "Status can only be PENDING, RECEIVED, or CANCELLED "),
+  warehouseId : z.number().int().min(1, "WarehouseId must be filled!").optional()
 });
 
 export type UpdateProcurementOrderInput = z.infer<typeof updateProcurementOrderSchema>;
