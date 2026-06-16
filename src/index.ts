@@ -13,6 +13,7 @@ import { contractRouter } from "./routes/contract.routes";
 import { procurementOrderRouter } from "./routes/procurementOrder.routes";
 import { rawMaterialRouter } from "./routes/rawMaterial.routes";
 import { productionOrderRouter } from "./routes/productionOrder.routes";
+import { stockRouter } from "./routes/stock.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -46,6 +47,8 @@ app.use("/api/v1/procurement-orders", procurementOrderRouter);
 app.use("/api/v1/raw-materials", rawMaterialRouter);
 
 app.use("/api/v1/production-orders", productionOrderRouter);
+
+app.use("/api/v1/stocks", stockRouter);
 
 app.use(errorHandler);
 
