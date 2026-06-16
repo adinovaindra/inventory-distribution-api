@@ -22,3 +22,14 @@ export async function addRawMaterialRepo(data: { procurementOrderId: number; war
     data,
   });
 }
+
+export async function UpdateRawMaterialRepo(rawMaterialId: number, remainingWeightPerKg: number) {
+  return prisma.rawMaterial.update({
+    where: {
+      id: rawMaterialId,
+    },
+    data: {
+      remainingWeightPerKg,
+    },
+  });
+}

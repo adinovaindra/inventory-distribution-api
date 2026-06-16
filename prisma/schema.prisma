@@ -36,6 +36,7 @@ enum ProductionOrderStatus {
   PENDING
   IN_PROGRESS
   COMPLETED
+  CANCELLED
 }
 
 enum SupplierRegion {
@@ -170,9 +171,8 @@ model ProductionOrder {
   rawMaterialId           Int
   productId               Int
   inputWeightPerKg        Float
-  outputWeightPerKg       Float
-  susutPerKg              Float
-  productionDate          DateTime
+  outputWeightPerKg       Float?
+  susutPerKg              Float?
   status                  ProductionOrderStatus
   createdAt               DateTime              @default(now())
   rawMaterial             RawMaterial           @relation(fields: [rawMaterialId], references: [id])
