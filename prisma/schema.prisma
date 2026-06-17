@@ -229,7 +229,7 @@ model Vehicle {
   id            Int         @id @default(autoincrement())
   plateNumber   String      @unique
   type          VehicleType
-  capacityPerKg Float
+  capacityPerKg Int
   isAvailable   Boolean     @default(true)
   createdAt     DateTime    @default(now())
   deliveries    Delivery[]
