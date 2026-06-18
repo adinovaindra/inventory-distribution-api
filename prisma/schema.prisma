@@ -70,6 +70,7 @@ enum MillingJobStatus {
   PENDING
   IN_PROGRESS
   COMPLETED
+  CANCELLED
 }
 
 enum SalesOrderCustomerType {
@@ -255,13 +256,12 @@ model MillingJob {
   customerName      String
   customerPhone     String?
   inputWeightPerKg  Float
-  outputUtuhPerKg   Float
-  outputBrokenPerKg Float
-  OutputMenirPerKg  Float
-  OutputRejectPerKg Float
-  OutputKatulPerKg  Float
-  susutPerKg        Float
-  jobDate           DateTime
-  status            MillingJobStatus
+  outputUtuhPerKg   Float?
+  outputBrokenPerKg Float?
+  outputMenirPerKg  Float?
+  outputRejectPerKg Float?
+  outputKatulPerKg  Float?
+  susutPerKg        Float?
+  status            MillingJobStatus  
   createdAt         DateTime          @default(now())
 }

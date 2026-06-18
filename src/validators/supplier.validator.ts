@@ -10,7 +10,7 @@ export const createSupplierSchema = z.object({
     .refine((number) => {
       const phoneRegex = /^(?:08)[1-9][0-9]{7,10}$/;
       return phoneRegex.test(number);
-    }, "Phone number format must be correct!"),
+    }, "Phone number format must be correct!(08XXX)"),
   address: z.string().trim().min(1, "Address must be filled!"),
 });
 
