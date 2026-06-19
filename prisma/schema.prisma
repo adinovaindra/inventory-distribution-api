@@ -51,7 +51,6 @@ enum SalesOrderStatus {
   PROCESSING
   READY
   DELIVERED
-  CANCELLED
 }
 
 enum DeliveryStatus {
@@ -208,8 +207,7 @@ model SalesOrder {
   contractId         Int?
   customerName       String
   customerType       SalesOrderCustomerType
-  orderDate          DateTime
-  status             SalesOrderStatus
+  status             SalesOrderStatus        @default(PENDING)
   createdAt          DateTime                @default(now())
   contract           Contract?               @relation(fields: [contractId], references: [id])
   salesOrderProducts SalesOrderProduct[]

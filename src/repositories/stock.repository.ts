@@ -10,11 +10,22 @@ export async function findAllStocksRepo(): Promise<Stock[]> {
 }
 
 export async function findStockByIdRepo(id: number): Promise<Stock | null> {
-    return prisma.stock.findUnique({
-        where: {
-            id
-        }
-    })
+  return prisma.stock.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+export async function checkStockByProductIdRepo(warehouseId: number, productId: number): Promise<Stock | null> {
+  return prisma.stock.findUnique({
+    where: {
+      warehouseId_productId: {
+        warehouseId,
+        productId,
+      },
+    },
+  });
 }
 
 export async function upsertStockRepo(warehouseId: number, productId: number, outputWeightPerKg: number): Promise<Stock> {
