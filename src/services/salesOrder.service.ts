@@ -1,5 +1,5 @@
 import { SalesOrder } from "@prisma/client";
-import { addSalesOrderRepo, findAllSalesOrdersRepo, findSalesOrderByIdRepo, updateSalesOrderRepo } from "../repositories/salesOrder.repository";
+import { addSalesOrderRepo, findAllSalesOrdersRepo, findSalesOrderByIdRepo, SalesOrderWithProducts, updateSalesOrderRepo } from "../repositories/salesOrder.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateSalesOrderInput, UpdateSalesOrderInput } from "../validators/salesOrder.validator";
 import { getContractById } from "./contract.service";
@@ -9,7 +9,7 @@ export async function getAllSalesOrder(): Promise<SalesOrder[]> {
   return findAllSalesOrdersRepo();
 }
 
-export async function getSalesOrderById(id: number): Promise<SalesOrder> {
+export async function getSalesOrderById(id: number): Promise<SalesOrderWithProducts> {
   const salesOrder = await findSalesOrderByIdRepo(id);
 
   if (!salesOrder) {

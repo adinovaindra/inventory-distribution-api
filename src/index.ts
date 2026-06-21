@@ -17,6 +17,7 @@ import { stockRouter } from "./routes/stock.routes";
 import { vehicleRouter } from "./routes/vehicle.routes";
 import { millingJobRouter } from "./routes/millingJob.routes";
 import { salesOrderRouter } from "./routes/salesOrder.routes";
+import { deliveryRouter } from "./routes/delivery.routes";
 
 const app = express();
 const PORT = env.PORT;
@@ -58,6 +59,8 @@ app.use("/api/v1/vehicles", vehicleRouter);
 app.use("/api/v1/milling-jobs", millingJobRouter);
 
 app.use("/api/v1/sales-orders", salesOrderRouter);
+
+app.use("/api/v1/deliveries", deliveryRouter);
 
 app.use(errorHandler);
 

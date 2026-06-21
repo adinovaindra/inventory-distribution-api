@@ -1,6 +1,10 @@
-import { SalesOrder } from "@prisma/client";
+import { Prisma, SalesOrder } from "@prisma/client";
 import { prisma } from "../config/database";
-import { CreateSalesOrderInput, UpdateSalesOrderInput } from "../validators/salesOrder.validator";
+import { CreateSalesOrderInput } from "../validators/salesOrder.validator";
+
+export type SalesOrderWithProducts = Prisma.SalesOrderGetPayload<{
+  include: { salesOrderProducts: true };
+}>;
 
 export async function findAllSalesOrdersRepo(): Promise<SalesOrder[]> {
   return prisma.salesOrder.findMany({
@@ -10,10 +14,13 @@ export async function findAllSalesOrdersRepo(): Promise<SalesOrder[]> {
   });
 }
 
-export async function findSalesOrderByIdRepo(id: number): Promise<SalesOrder | null> {
+export async function findSalesOrderByIdRepo(id: number): Promise<SalesOrderWithProducts | null> {
   return prisma.salesOrder.findUnique({
     where: {
       id,
+    },
+    include: {
+      salesOrderProducts: true,
     },
   });
 }
@@ -57,7 +64,7 @@ export async function addSalesOrderRepo(salesOrderData: CreateSalesOrderInput): 
   });
 }
 
-export async function updateSalesOrderRepo(id: number, salesOrderData: UpdateSalesOrderInput): Promise<SalesOrder> {
+export async function updateSalesOrderRepo(id: number, salesOrderData: Prisma.SalesOrderUncheckedUpdateInput): Promise<SalesOrder> {
   return prisma.salesOrder.update({
     where: {
       id,

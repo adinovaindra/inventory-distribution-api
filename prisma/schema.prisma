@@ -239,10 +239,9 @@ model Delivery {
   salesOrderId  Int             @unique      
   driverId      Int
   vehicleId     Int
-  status        DeliveryStatus
+  status        DeliveryStatus  @default(PENDING)
   departureTime DateTime?
   arrivalTime   DateTime?
-  notes         String?
   createdAt     DateTime        @default(now())
   salesOrder    SalesOrder      @relation(fields: [salesOrderId], references: [id])
   user          User            @relation(fields: [driverId], references: [id])
