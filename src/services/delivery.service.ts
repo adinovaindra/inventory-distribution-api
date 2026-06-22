@@ -6,6 +6,7 @@ import { getSalesOrderById } from "./salesOrder.service";
 import { findById } from "../repositories/user.repository";
 import { checkVehicleBeingUsed, getVehicleById } from "./vehicle.service";
 import { updateSalesOrderRepo } from "../repositories/salesOrder.repository";
+import { contractQueue } from "../jobs/queues/contract.queue";
 
 export async function getAllDeliveries(): Promise<Delivery[]> {
   return findAllDeliveriesRepo();
@@ -87,6 +88,8 @@ export async function updateDelivery(id: number, deliveryData: UpdateDeliveryInp
   }
 
   await updateSalesOrderRepo(existedDeliveryData.salesOrderId, { status: "DELIVERED" });
+
+  await contractQueue.add("fulfillment", { salesOrderId: existedDeliveryData.salesOrderId });
 
   return updateDeliveryRepo(id, {
     ...deliveryData,

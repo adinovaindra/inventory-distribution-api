@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 import { env } from "./env";
 
-const redisUrl = env.REDIS_URL
+const redisUrl = env.REDIS_URL;
 
 const redis = new Redis(redisUrl, {
   lazyConnect: true,
@@ -15,5 +15,10 @@ redis.on("connect", () => {
 redis.on("error", (err) => {
   console.log(`Redis connection error: ${err}`);
 });
+
+export const redisConnection = {
+  host: new URL(redisUrl).hostname,
+  port: Number(new URL(redisUrl).port),
+};
 
 export default redis;

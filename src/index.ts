@@ -18,6 +18,7 @@ import { vehicleRouter } from "./routes/vehicle.routes";
 import { millingJobRouter } from "./routes/millingJob.routes";
 import { salesOrderRouter } from "./routes/salesOrder.routes";
 import { deliveryRouter } from "./routes/delivery.routes";
+import "./jobs/workers/contract.worker";
 
 const app = express();
 const PORT = env.PORT;
