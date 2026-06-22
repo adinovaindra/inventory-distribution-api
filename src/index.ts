@@ -19,6 +19,7 @@ import { millingJobRouter } from "./routes/millingJob.routes";
 import { salesOrderRouter } from "./routes/salesOrder.routes";
 import { deliveryRouter } from "./routes/delivery.routes";
 import "./jobs/workers/contract.worker";
+import { serverAdapter } from "./config/bullboard";
 
 const app = express();
 const PORT = env.PORT;
@@ -62,6 +63,8 @@ app.use("/api/v1/milling-jobs", millingJobRouter);
 app.use("/api/v1/sales-orders", salesOrderRouter);
 
 app.use("/api/v1/deliveries", deliveryRouter);
+
+app.use("/admin/queues", serverAdapter.getRouter());
 
 app.use(errorHandler);
 

@@ -9,6 +9,6 @@ contractQueue.add(
   "expired-check",
   {},
   {
-    repeat: { pattern: "0 0 * * *" },
+    repeat: { pattern: "0 17 * * *" },
   },
 );
