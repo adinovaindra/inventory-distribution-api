@@ -1,5 +1,6 @@
 import { Contract, Prisma } from "@prisma/client";
 import { prisma } from "../config/database";
+import { date } from "zod";
 
 export async function findAllContractsRepo(): Promise<Contract[]> {
   return prisma.contract.findMany({
@@ -15,6 +16,15 @@ export async function findContractByIdRepo(id: number): Promise<Contract | null>
       id,
     },
   });
+}
+
+export async function findContractByEndDateRepo(): Promise<Contract[]> {
+  return prisma.contract.findMany({
+    where: {
+      status: "ACTIVE",
+      endDate: {lt: new Date()}
+    }
+  })
 }
 
 export async function addContractRepo(contractData: Prisma.ContractCreateInput): Promise<Contract> {
