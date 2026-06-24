@@ -1,0 +1,32 @@
+import express from "express";
+import { authRouter } from "./auth.routes";
+import { contractRouter } from "./contract.routes";
+import { deliveryRouter } from "./delivery.routes";
+import { millingJobRouter } from "./millingJob.routes";
+import { procurementOrderRouter } from "./procurementOrder.routes";
+import { productRouter } from "./product.routes";
+import { productionOrderRouter } from "./productionOrder.routes";
+import { profileRouter } from "./profile.routes";
+import { rawMaterialRouter } from "./rawMaterial.routes";
+import { salesOrderRouter } from "./salesOrder.routes";
+import { stockRouter } from "./stock.routes";
+import { supplierRouter } from "./supplier.routes";
+import { vehicleRouter } from "./vehicle.routes";
+import { warehouseRouter } from "./warehouse.routes";
+
+export const v1Router = express.Router();
+
+v1Router.use("/auth", authRouter);
+v1Router.use("/contracts", contractRouter);
+v1Router.use("/deliveries", deliveryRouter);
+v1Router.use("/milling-jobs", millingJobRouter);
+v1Router.use("/procurement-orders", procurementOrderRouter);
+v1Router.use("/products", productRouter);
+v1Router.use("/production-orders", productionOrderRouter);
+v1Router.use("/profiles", profileRouter);
+v1Router.use("/raw-materials", rawMaterialRouter);
+v1Router.use("/sales-orders", salesOrderRouter);
+v1Router.use("/stocks", stockRouter);
+v1Router.use("/suppliers", supplierRouter);
+v1Router.use("/vehicles", vehicleRouter);
+v1Router.use("/warehouses", warehouseRouter);
