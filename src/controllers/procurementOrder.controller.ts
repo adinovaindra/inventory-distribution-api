@@ -3,10 +3,12 @@ import { createProcurementOrder, getAllProcurementOrders, getProcurementOrderByI
 import { successResponse } from "../utils/response";
 import { BadRequestError } from "../utils/error";
 import { createProcurementOrderSchema, updateProcurementOrderSchema } from "../validators/procurementOrder.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllProcurementOrdersController(req: Request, res: Response) {
-  const result = await getAllProcurementOrders();
-  res.status(200).json(successResponse("Successfully retrieve all procurement orders!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllProcurementOrders(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all procurement orders!", data, meta));
 }
 
 export async function getProcurementOrderByIdController(req: Request, res: Response) {

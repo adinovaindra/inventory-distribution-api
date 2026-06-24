@@ -3,10 +3,12 @@ import { createSalesOrder, getAllSalesOrder, getSalesOrderById, updateSalesOrder
 import { successResponse } from "../utils/response";
 import { BadRequestError } from "../utils/error";
 import { createSalesOrderSchema, updateSalesOrderSchema } from "../validators/salesOrder.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllSalesOrderController(req: Request, res: Response) {
-  const result = await getAllSalesOrder();
-  res.status(200).json(successResponse("Successfully retrieve all sales order!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllSalesOrder(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all sales order!", data, meta));
 }
 
 export async function getSalesOrderByIdController(req: Request, res: Response) {

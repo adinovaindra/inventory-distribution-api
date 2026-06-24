@@ -1,19 +1,14 @@
 import { Request, Response } from "express";
-import {
-  addWarehouse,
-  deleteWarehouse,
-  getAllWarehouse,
-  getWarehouseById,
-  updateWarehouse,
-} from "../services/warehouse.service";
+import { addWarehouse, deleteWarehouse, getAllWarehouses, getWarehouseById, updateWarehouse } from "../services/warehouse.service";
 import { BadRequestError } from "../utils/error";
 import { successResponse } from "../utils/response";
 import { createWarehouseSchema, updateWarehouseSchema } from "../validators/warehouse.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllWarehouseController(req: Request, res: Response) {
-  const result = await getAllWarehouse();
-
-  res.status(200).json(successResponse("Successfully retrieve all warehouse!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllWarehouses(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all warehouse!", data, meta));
 }
 
 export async function getWarehouseByIdController(req: Request, res: Response) {

@@ -4,9 +4,16 @@ import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateSalesOrderInput, UpdateSalesOrderInput } from "../validators/salesOrder.validator";
 import { getContractById } from "./contract.service";
 import { checkStockByProductIdRepo } from "../repositories/stock.repository";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllSalesOrder(): Promise<SalesOrder[]> {
-  return findAllSalesOrdersRepo();
+export async function getAllSalesOrder(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allSalesOrders = await findAllSalesOrdersRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allSalesOrders, limit);
+  return {
+    data: allSalesOrders,
+    meta: paginationMeta,
+  };
 }
 
 export async function getSalesOrderById(id: number): Promise<SalesOrderWithProducts> {

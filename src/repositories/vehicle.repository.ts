@@ -1,11 +1,10 @@
 import { Prisma, Vehicle } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllVehiclesRepo(): Promise<Vehicle[]> {
+export async function findAllVehiclesRepo(paginationQuery: PaginationQuery): Promise<Vehicle[]> {
   return prisma.vehicle.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 

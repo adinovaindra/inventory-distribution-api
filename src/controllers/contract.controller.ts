@@ -3,10 +3,12 @@ import { createContract, getAllContracts, getContractById, updateContract } from
 import { successResponse } from "../utils/response";
 import { BadRequestError } from "../utils/error";
 import { createContractSchema, updateContractSchema } from "../validators/contract.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllContractsController(req: Request, res: Response) {
-  const result = await getAllContracts();
-  res.status(200).json(successResponse("Successfully retrieve all contracts!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllContracts(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all contracts!", data, meta));
 }
 
 export async function getContractByIdController(req: Request, res: Response) {

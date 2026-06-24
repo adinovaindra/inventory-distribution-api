@@ -3,10 +3,12 @@ import { createMillingJob, getAllMillingJobs, getMillingJobById, updateMillingJo
 import { successResponse } from "../utils/response";
 import { BadRequestError } from "../utils/error";
 import { createMillingJobSchema, updateMillingJobSchema } from "../validators/millingJobs.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllMillingJobsController(req: Request, res: Response) {
-  const result = await getAllMillingJobs();
-  res.status(200).json(successResponse("Successfully retrieve all milling jobs!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllMillingJobs(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all milling jobs!", data, meta));
 }
 
 export async function getMillingJobByIdController(req: Request, res: Response) {

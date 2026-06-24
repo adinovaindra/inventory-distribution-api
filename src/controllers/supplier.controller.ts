@@ -1,18 +1,14 @@
 import { Request, Response } from "express";
-import {
-  createSupplier,
-  deleteSupplier,
-  getAllSupplier,
-  getSupplierById,
-  updateSupplier,
-} from "../services/supplier.service";
+import { createSupplier, deleteSupplier, getAllSupplier, getSupplierById, updateSupplier } from "../services/supplier.service";
 import { successResponse } from "../utils/response";
 import { createSupplierSchema, updateSupplierSchema } from "../validators/supplier.validator";
 import { BadRequestError } from "../utils/error";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllSupplierController(req: Request, res: Response) {
-  const result = await getAllSupplier();
-  res.status(200).json(successResponse("Successfully retrieve all suppliers", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllSupplier(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all suppliers", data, meta));
 }
 
 export async function getSupplierByIdController(req: Request, res: Response) {

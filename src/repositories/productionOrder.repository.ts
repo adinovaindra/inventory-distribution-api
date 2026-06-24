@@ -1,11 +1,10 @@
 import { Prisma, ProductionOrder, ProductionOrderStatus } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllProductionOrdersRepo(): Promise<ProductionOrder[]> {
+export async function findAllProductionOrdersRepo(paginationQuery: PaginationQuery): Promise<ProductionOrder[]> {
   return prisma.productionOrder.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 
@@ -26,7 +25,7 @@ export async function addProductionOrderRepo(productionOrderData: Prisma.Product
 export async function findInProgressProductionOrderRepo() {
   return prisma.productionOrder.findFirst({
     where: {
-      status : "IN_PROGRESS"
+      status: "IN_PROGRESS",
     },
   });
 }

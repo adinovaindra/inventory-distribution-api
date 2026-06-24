@@ -3,10 +3,12 @@ import { createVehicle, deleteVehicle, getAllVehicles, getVehicleById, updateVeh
 import { successResponse } from "../utils/response";
 import { createVehicleSchema, updateVehicleSchema } from "../validators/vehicle.validator";
 import { BadRequestError } from "../utils/error";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllVehiclesController(req: Request, res: Response) {
-  const result = await getAllVehicles();
-  res.status(200).json(successResponse("Successfully retrieve all vehicles!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllVehicles(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all vehicles!", data, meta));
 }
 
 export async function getVehicleByIdController(req: Request, res: Response) {
@@ -39,6 +41,6 @@ export async function deleteVehicleController(req: Request, res: Response) {
   if (isNaN(id)) {
     throw new BadRequestError("Id is invalid!");
   }
-  const result =  await deleteVehicle(id)
-  res.status(200).json(successResponse("Vehicle is successfully deleted!", result))
+  const result = await deleteVehicle(id);
+  res.status(200).json(successResponse("Vehicle is successfully deleted!", result));
 }

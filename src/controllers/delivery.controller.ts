@@ -3,10 +3,12 @@ import { createDelivery, getAllDeliveries, getDeliveryById, updateDelivery } fro
 import { successResponse } from "../utils/response";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { createDeliverySchema, updateDeliverySchema } from "../validators/delivery.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllDeliveriesController(req: Request, res: Response) {
-  const result = await getAllDeliveries();
-  res.status(200).json(successResponse("Successfully retrieve all deliveries!", result));
+  const { cursor, limit } = paginationSchema.parse(req.query);
+  const { data, meta } = await getAllDeliveries(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all deliveries!", data, meta));
 }
 
 export async function getDeliveryByIdController(req: Request, res: Response) {

@@ -1,18 +1,17 @@
 import { Prisma, Warehouse } from "@prisma/client";
-import {
-  checkRawMaterialAtWarehouse,
-  checkStockAtWarehouse,
-  createWarehouseRepo,
-  deleteWarehouseRepo,
-  findAllWarehouseRepo,
-  findWarehouseByIdRepo,
-  updateWarehouseRepo,
-} from "../repositories/warehouse.repository";
+import { checkRawMaterialAtWarehouse, checkStockAtWarehouse, createWarehouseRepo, deleteWarehouseRepo, findAllWarehouseRepo, findWarehouseByIdRepo, updateWarehouseRepo } from "../repositories/warehouse.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateWarehouseInput, UpdateWarehouseInput } from "../validators/warehouse.validator";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllWarehouse(): Promise<Warehouse[]> {
-  return findAllWarehouseRepo();
+export async function getAllWarehouses(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allWarehouses = await findAllWarehouseRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allWarehouses, limit);
+  return {
+    data: allWarehouses,
+    meta: paginationMeta,
+  };
 }
 
 export async function getWarehouseById(id: number): Promise<Warehouse> {

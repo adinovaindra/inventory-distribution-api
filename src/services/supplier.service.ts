@@ -1,16 +1,17 @@
 import { Supplier, Prisma } from "@prisma/client";
-import {
-  createSupplierRepo,
-  deleteSupplierByIdRepo,
-  findAllSupplierRepo,
-  findSupplierByIdRepo,
-  updateSupplierByIdRepo,
-} from "../repositories/supplier.repository";
+import { createSupplierRepo, deleteSupplierByIdRepo, findAllSupplierRepo, findSupplierByIdRepo, updateSupplierByIdRepo } from "../repositories/supplier.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateSupplierInput, UpdateSupplierInput } from "../validators/supplier.validator";
+import { buildPaginationMeta, buildPaginationQuery, PaginationMeta } from "../utils/pagination";
 
-export async function getAllSupplier(): Promise<Supplier[]> {
-  return findAllSupplierRepo();
+export async function getAllSupplier(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allSuppliers = await findAllSupplierRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allSuppliers, limit);
+  return {
+    data: allSuppliers,
+    meta: paginationMeta,
+  };
 }
 
 export async function getSupplierById(id: number): Promise<Supplier> {

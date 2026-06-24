@@ -1,11 +1,10 @@
 import { MillingJob, Prisma } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllMillingJobsRepo(): Promise<MillingJob[]> {
+export async function findAllMillingJobsRepo(paginationQuery: PaginationQuery): Promise<MillingJob[]> {
   return prisma.millingJob.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 
@@ -18,11 +17,11 @@ export async function findMillingJobByIdRepo(id: number): Promise<MillingJob | n
 }
 
 export async function findInProgressMillingJobStatusRepo(): Promise<MillingJob | null> {
-    return prisma.millingJob.findFirst({
-        where: {
-            status: {equals: "IN_PROGRESS"}
-        }
-    })
+  return prisma.millingJob.findFirst({
+    where: {
+      status: { equals: "IN_PROGRESS" },
+    },
+  });
 }
 
 export async function addMillingJobRepo(millingJobData: Prisma.MillingJobCreateInput): Promise<MillingJob> {

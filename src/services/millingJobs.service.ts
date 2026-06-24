@@ -2,9 +2,16 @@ import { MillingJob, MillingJobStatus } from "@prisma/client";
 import { addMillingJobRepo, findAllMillingJobsRepo, findInProgressMillingJobStatusRepo, findMillingJobByIdRepo, updateMillingJobRepo } from "../repositories/millingJobs.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateMillingJobInput, UpdateMillingJobInput } from "../validators/millingJobs.validator";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllMillingJobs(): Promise<MillingJob[]> {
-  return findAllMillingJobsRepo();
+export async function getAllMillingJobs(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allMilingJobs = await findAllMillingJobsRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allMilingJobs, limit);
+  return {
+    data: allMilingJobs,
+    meta: paginationMeta,
+  };
 }
 
 export async function getMillingJobById(id: number): Promise<MillingJob> {

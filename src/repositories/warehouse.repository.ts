@@ -1,11 +1,10 @@
 import { Prisma, RawMaterial, Stock, Warehouse } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllWarehouseRepo(): Promise<Warehouse[]> {
+export async function findAllWarehouseRepo(paginationQuery: PaginationQuery): Promise<Warehouse[]> {
   return prisma.warehouse.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 

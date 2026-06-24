@@ -6,9 +6,16 @@ import { getSupplierById } from "./supplier.service";
 import { getContractById } from "./contract.service";
 import { getWarehouseById } from "./warehouse.service";
 import { addRawMaterialRepo } from "../repositories/rawMaterial.repository";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllProcurementOrders(): Promise<ProcurementOrder[]> {
-  return findAllProcurementOrdersRepo();
+export async function getAllProcurementOrders(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allProcurementOrders = await findAllProcurementOrdersRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allProcurementOrders, limit);
+  return {
+    data: allProcurementOrders,
+    meta: paginationMeta,
+  };
 }
 
 export async function getProcurementOrderById(id: number): Promise<ProcurementOrder> {

@@ -1,11 +1,10 @@
 import { RawMaterial, SupplierRegion } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllRawMaterialsRepo(): Promise<RawMaterial[]> {
+export async function findAllRawMaterialsRepo(paginationQuery: PaginationQuery): Promise<RawMaterial[]> {
   return prisma.rawMaterial.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery
   });
 }
 

@@ -1,6 +1,7 @@
 import { prisma } from "../config/database";
 import { Delivery, Prisma } from "@prisma/client";
 import { CreateDeliveryInput, UpdateDeliveryInput } from "../validators/delivery.validator";
+import { PaginationQuery } from "../utils/pagination";
 
 export async function findActiveDeliveryByVehicleIdRepo(vehicleId: number): Promise<Delivery | null> {
   return prisma.delivery.findFirst({
@@ -27,11 +28,9 @@ export async function findDeliveryBySalesOrderIdRepo(salesOrderId: number): Prom
   });
 }
 
-export async function findAllDeliveriesRepo(): Promise<Delivery[]> {
+export async function findAllDeliveriesRepo(paginationQuery: PaginationQuery): Promise<Delivery[]> {
   return prisma.delivery.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 

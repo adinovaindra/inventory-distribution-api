@@ -1,11 +1,10 @@
 import { Stock } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllStocksRepo(): Promise<Stock[]> {
+export async function findAllStocksRepo(paginationQuery: PaginationQuery): Promise<Stock[]> {
   return prisma.stock.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 

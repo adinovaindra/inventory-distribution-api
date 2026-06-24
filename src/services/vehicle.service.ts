@@ -3,9 +3,16 @@ import { addVehicleRepo, deleteVehicleRepo, findAllVehiclesRepo, findVehicleById
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateVehicleInput, UpdateVehicleInput } from "../validators/vehicle.validator";
 import { findActiveDeliveryByVehicleIdRepo, findDeliveryByVehicleIdRepo } from "../repositories/delivery.repository";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllVehicles(): Promise<Vehicle[]> {
-  return findAllVehiclesRepo();
+export async function getAllVehicles(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allVehicles = await findAllVehiclesRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allVehicles, limit);
+  return {
+    data: allVehicles,
+    meta: paginationMeta,
+  };
 }
 
 export async function getVehicleById(id: number): Promise<Vehicle> {

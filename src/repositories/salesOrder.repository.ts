@@ -1,16 +1,15 @@
 import { Prisma, SalesOrder } from "@prisma/client";
 import { prisma } from "../config/database";
 import { CreateSalesOrderInput } from "../validators/salesOrder.validator";
+import { PaginationQuery } from "../utils/pagination";
 
 export type SalesOrderWithProducts = Prisma.SalesOrderGetPayload<{
   include: { salesOrderProducts: true };
 }>;
 
-export async function findAllSalesOrdersRepo(): Promise<SalesOrder[]> {
+export async function findAllSalesOrdersRepo(paginationQuery: PaginationQuery): Promise<SalesOrder[]> {
   return prisma.salesOrder.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 

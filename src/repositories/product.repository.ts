@@ -1,18 +1,17 @@
 import { Prisma, Product, ProductName } from "@prisma/client";
 import { prisma } from "../config/database";
+import { PaginationQuery } from "../utils/pagination";
 
-export async function findAllProductRepo(): Promise<Product[]> {
+export async function findAllProductRepo(paginationQuery: PaginationQuery): Promise<Product[]> {
   return prisma.product.findMany({
-    orderBy: {
-      id: "asc",
-    },
+    ...paginationQuery,
   });
 }
 
 export async function findProductById(id: number): Promise<Product | null> {
   return prisma.product.findUnique({
     where: {
-      id
+      id,
     },
   });
 }

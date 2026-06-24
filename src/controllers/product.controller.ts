@@ -9,10 +9,12 @@ import {
 import { successResponse } from "../utils/response";
 import { BadRequestError } from "../utils/error";
 import { createProductSchema, updateProductSchema } from "../validators/products.validator";
+import { paginationSchema } from "../utils/pagination";
 
 export async function getAllProductsController(req: Request, res: Response) {
-  const result = await getAllProducts();
-  res.status(200).json(successResponse("Successfully retrieve all products!", result));
+  const {cursor, limit} = paginationSchema.parse(req.query)
+  const {data, meta} = await getAllProducts(cursor, limit);
+  res.status(200).json(successResponse("Successfully retrieve all products!", data, meta));
 }
 
 export async function getProductByIdController(req: Request, res: Response) {

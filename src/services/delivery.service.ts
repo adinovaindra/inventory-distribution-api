@@ -7,9 +7,16 @@ import { findById } from "../repositories/user.repository";
 import { checkVehicleBeingUsed, getVehicleById } from "./vehicle.service";
 import { updateSalesOrderRepo } from "../repositories/salesOrder.repository";
 import { contractQueue } from "../jobs/queues/contract.queue";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllDeliveries(): Promise<Delivery[]> {
-  return findAllDeliveriesRepo();
+export async function getAllDeliveries(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allDeliveries = await findAllDeliveriesRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allDeliveries, limit);
+  return {
+    data: allDeliveries,
+    meta: paginationMeta,
+  };
 }
 
 export async function getDeliveryById(id: number): Promise<Delivery> {

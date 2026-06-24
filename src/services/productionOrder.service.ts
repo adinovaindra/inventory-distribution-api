@@ -6,9 +6,16 @@ import { UpdateRawMaterialRepo } from "../repositories/rawMaterial.repository";
 import { upsertStockRepo } from "../repositories/stock.repository";
 import { getRawMaterialById } from "./rawMaterial.service";
 import { getProductById } from "./product.service";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllProductionOrders(): Promise<ProductionOrder[]> {
-  return findAllProductionOrdersRepo();
+export async function getAllProductionOrders(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allProductionOrders = await findAllProductionOrdersRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allProductionOrders, limit);
+  return {
+    data: allProductionOrders,
+    meta: paginationMeta,
+  };
 }
 
 export async function getProductionOrderById(id: number): Promise<ProductionOrder> {

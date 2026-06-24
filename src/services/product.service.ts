@@ -1,17 +1,17 @@
 import { Prisma, Product } from "@prisma/client";
-import {
-  addProductRepo,
-  deleteProductRepo,
-  findAllProductRepo,
-  findProductById,
-  findStockByProductId,
-  updateProductRepo,
-} from "../repositories/product.repository";
+import { addProductRepo, deleteProductRepo, findAllProductRepo, findProductById, findStockByProductId, updateProductRepo } from "../repositories/product.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateProductInput, UpdateProductInput } from "../validators/products.validator";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllProducts() {
-  return findAllProductRepo();
+export async function getAllProducts(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allProducts = await findAllProductRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allProducts, limit);
+  return {
+    data: allProducts,
+    meta: paginationMeta,
+  };
 }
 
 export async function getProductById(id: number): Promise<Product> {

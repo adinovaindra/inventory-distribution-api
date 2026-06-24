@@ -2,9 +2,16 @@ import { Contract, Prisma } from "@prisma/client";
 import { addContractRepo, findAllContractsRepo, findContractByIdRepo, updateContractRepo } from "../repositories/contract.repository";
 import { BadRequestError, NotFoundError } from "../utils/error";
 import { CreateContractInput, UpdateContractInput } from "../validators/contract.validator";
+import { buildPaginationMeta, buildPaginationQuery } from "../utils/pagination";
 
-export async function getAllContracts(): Promise<Contract[]> {
-  return findAllContractsRepo();
+export async function getAllContracts(cursor: number | undefined, limit: number) {
+  const paginationQuery = buildPaginationQuery(cursor, limit);
+  const allContracts = await findAllContractsRepo(paginationQuery);
+  const paginationMeta = buildPaginationMeta(allContracts, limit);
+  return {
+    data: allContracts,
+    meta: paginationMeta,
+  };
 }
 
 export async function getContractById(id: number): Promise<Contract> {
