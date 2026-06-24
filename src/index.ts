@@ -20,6 +20,7 @@ import { salesOrderRouter } from "./routes/salesOrder.routes";
 import { deliveryRouter } from "./routes/delivery.routes";
 import "./jobs/workers/contract.worker";
 import { serverAdapter } from "./config/bullboard";
+import { globalLimiter } from "./middlewares/ratelimiter.middleware";
 
 const app = express();
 const PORT = env.PORT;
@@ -27,6 +28,8 @@ const PORT = env.PORT;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+app.use(globalLimiter)
 
 app.get("/health", (req, res) => {
   res.json({
@@ -70,8 +73,6 @@ app.use(errorHandler);
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
-
-  await redis.connect();
 });
 
 export default app;
