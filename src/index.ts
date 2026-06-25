@@ -8,6 +8,8 @@ import "./jobs/workers/contract.worker";
 import { serverAdapter } from "./config/bullboard";
 import { globalLimiter } from "./middlewares/ratelimiter.middleware";
 import { v1Router } from "./routes/v1.routes";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger";
 
 const app = express();
 const PORT = env.PORT;
@@ -25,6 +27,8 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/v1", v1Router);
 
