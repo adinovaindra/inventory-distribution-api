@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import redis from "./config/redis";
 import { env } from "./config/env";
 import { errorHandler } from "./middlewares/error.middleware";
 import "./jobs/workers/contract.worker";
@@ -19,6 +18,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use(globalLimiter);
+
+app.get("/", (req, res) => {
+  res.redirect("/api/docs");
+});
 
 app.get("/health", (req, res) => {
   res.json({
