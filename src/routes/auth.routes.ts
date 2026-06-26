@@ -74,10 +74,10 @@ authRouter.post("/register", authenticate, authorize("ADMIN"), register);
  *             properties:
  *               email:
  *                 type: string
- *                 example: "adinovaindra@udbarokah.com"
+ *                 example: "adminuser@barokah.com"
  *               password:
  *                 type: string
- *                 example: "password123"
+ *                 example: "admin123"
  *     responses:
  *       200:
  *         description: User login successfully
