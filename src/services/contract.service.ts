@@ -40,6 +40,12 @@ export async function createContract(contractData: CreateContractInput): Promise
 }
 
 export async function updateContract(id: number, contractData: UpdateContractInput): Promise<Contract> {
+  const existedContract = await getContractById(id);
+
+  if (existedContract.status === "COMPLETED" || existedContract.status === "CANCELLED") {
+    throw new BadRequestError("Contract status is finalized and cannot be updated!");
+  }
+
   try {
     return await updateContractRepo(id, contractData);
   } catch (error) {

@@ -126,7 +126,7 @@ productRouter.post("/", authenticate, authorize("ADMIN"), createProductControlle
  *         example: 1
  *     tags:
  *       - Product
- *     summary: Update a product
+ *     summary: Update a product by id
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -173,7 +173,7 @@ productRouter.put("/:id", authenticate, authorize("ADMIN"), updateProductControl
  *         example: 1
  *     tags:
  *       - Product
- *     summary: Delete a product
+ *     summary: Delete a product by id
  *     security:
  *       - bearerAuth: []
  *     responses:

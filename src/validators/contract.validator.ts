@@ -15,7 +15,7 @@ export const createContractSchema = z.object({
 export type CreateContractInput = z.infer<typeof createContractSchema>;
 
 export const updateContractSchema = z.object({
-  status: z.enum(ContractStatus, "Contract status is either null or only can be either ACTIVE, COMPLETED, or CANCELLED!"),
+  status: z.enum(["COMPLETED", "CANCELLED"], "Contract status is either null or only can be either COMPLETED, or CANCELLED!"),
 });
 
 export type UpdateContractInput = z.infer<typeof updateContractSchema>;

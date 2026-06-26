@@ -11,7 +11,7 @@ export type CreateProductionOrderInput = z.infer<typeof createProductionOrderSch
 
 export const updateProductionOrderSchema = z.object({
   outputWeightPerKg: z.number().min(1, "Please input the output correctly!").optional(),
-  status: z.enum(ProductionOrderStatus, "Status only can be either IN_PROGRESS, COMPLETED, or CANCELLED!"),
+  status: z.enum(["IN_PROGRESS", "COMPLETED", "CANCELLED"], "Status only can be either IN_PROGRESS, COMPLETED, or CANCELLED!"),
 });
 
 export type UpdateProductionOrderInput = z.infer<typeof updateProductionOrderSchema>;

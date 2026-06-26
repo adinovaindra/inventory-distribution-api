@@ -135,7 +135,7 @@ supplierRouter.post("/", authenticate, authorize("ADMIN"), createSupplierControl
  *         example: 1
  *     tags:
  *       - Supplier
- *     summary: Update a supplier
+ *     summary: Update a supplier by id
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -188,7 +188,7 @@ supplierRouter.put("/:id", authenticate, authorize("ADMIN"), updateSupplierContr
  *         example: 1
  *     tags:
  *       - Supplier
- *     summary: Delete a supplier
+ *     summary: Delete a supplier by id
  *     security:
  *       - bearerAuth: []
  *     responses:

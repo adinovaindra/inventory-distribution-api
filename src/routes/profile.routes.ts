@@ -97,7 +97,7 @@ profileRouter.put("/:id", authenticate, authorizeSelfOrAdmin, updateProfile);
  *         example: 1
  *     tags:
  *       - Profile
- *     summary: Delete an existing profile
+ *     summary: Delete an existing profile by id
  *     security:
  *       - bearerAuth: []
  *     responses:
